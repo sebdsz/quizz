@@ -19,7 +19,7 @@ class QuestionsService
         $success = sprintf('Bravo, la réponse à la question «%s» était bien «%s» !', $question->question, $question->answer);
         $fail = sprintf('Dommage, la réponse à la question  «%s» était «%s» !', $question->question, $question->answer);
 
-        if (Helpers::clean($question->answer) === Helper::clean($request->get('answer'))) {
+        if (Helpers::clean($question->answer) === Helpers::clean($request->get('answer'))) {
             Session::put('score', Session::get('score') + 1);
             if ($maxQuestion)
                 return view('front.result', compact('score', 'maxQuestion'))->with('messageSuccess', $success);
@@ -44,12 +44,12 @@ class QuestionsService
 
         if (is_array($request->get('answer'))) {
             foreach ($question->answers as $key => $answer) {
-                $status[$key] = false;
+                $status[$key] = 'Nope';
                 foreach ($request->get('answer') as $ourAnswer) {
                     if (Helpers::clean($answer->answer) === Helpers::clean($ourAnswer)) {
                         Session::put('score', Session::get('score') + (1 / $nbAnswers));
                         $goodAnswers++;
-                        $status[$key] = true;
+                        $status[$key] = 'Yep';
                     }
                 }
             }
@@ -59,21 +59,22 @@ class QuestionsService
             $answers[] = $answer->answer;
         }
 
+
         if ($goodAnswers == $nbAnswers) {
             if ($maxQuestion)
-                return view('front.result', compact('score', 'maxQuestion'))->with('messageSuccessMultiple', $question->answers)->with('messageGood', $goodAnswers);
+                return view('front.result', compact('score', 'maxQuestion'))->with('messageSuccessMultiple', ['status' => $status, 'answers' => $answers])->with('messageGood', $goodAnswers);
             else
-                return back()->with('messageSuccessMultiple', $question->answers)->with('messageGood', $goodAnswers);
+                return back()->with('messageSuccessMultiple', $question->answers)->with('messageGood', ['status' => $status, 'answers' => $answers]);
         }
 
         if ($maxQuestion)
-            return view('front.result', compact('score', 'maxQuestion'))->with('messageFailMultiple', $question->answers)->with('messageGood', $goodAnswers);
+            return view('front.result', compact('score', 'maxQuestion'))->with('messageFailMultiple', ['status' => $status, 'answers' => $answers])->with('messageGood', $goodAnswers);
         else
             return back()->with('messageFailMultiple', ['status' => $status, 'answers' => $answers])->with('messageGood', $goodAnswers);
 
     }
 
-    public static function result(Request $request, $maxQuestion, $theme, $score)
+    public static function getResult(Request $request, $maxQuestion, $theme, $score)
     {
         $lastQuestion = Question::findOrFail(Session::get('questions')[$maxQuestion - 1]);
         Result::create([

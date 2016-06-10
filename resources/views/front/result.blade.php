@@ -23,9 +23,9 @@
                         Dommage vous avez trouvé {{ session()->get('messageGood') }} bonne(s) réponse(s), les réponses
                         étaient
                         donc :
-                        @foreach(array_combine(session()->get('messageFailMultiple')['status'], session()->get('messageFailMultiple')['answers']) as $status => $answer)
-                            @if($status)<p class="alert-success" style="padding:5px">{{ $answer }}</p>@endif
-                            @if(!$status)<p class="alert-danger" style="padding:5px">{{ $answer }}</p>@endif
+                        @foreach(session()->get('messageFailMultiple')['answers'] as $key => $answer)
+                            @if(session()->get('messageFailMultiple')['status'][$key] === 'Yep')<p class="alert-success" style="padding:5px">{{ $answer }}</p>@endif
+                            @if(session()->get('messageFailMultiple')['status'][$key] === 'Nope')<p class="alert-danger" style="padding:5px">{{ $answer }}</p>@endif
                         @endforeach
                     </div>
                 @endif

@@ -14,22 +14,19 @@
                 @if( session()->has('messageSuccessMultiple'))
                     <div class="alert alert-success">
                         Bravo, toutes les réponses sont exactes, les réponses étaient bien :
-                        <ul>
-                            @foreach(session()->get('messageSuccessMultiple') as $success)
-                                <li>{{ $success->answer }}</li>
-                            @endforeach
-                        </ul>
+                        @foreach(session()->get('messageSuccessMultiple') as $success)
+                            <p>{{ $success->answer }}</p>
+                        @endforeach
                     </div>
                 @elseif(session()->has('messageFailMultiple'))
-                    <div class="alert alert-danger">
+                    <div class="alert">
                         Dommage vous avez trouvé {{ session()->get('messageGood') }} bonne(s) réponse(s), les réponses
                         étaient
                         donc :
-                        <ul>
-                            @foreach(session()->get('messageFailMultiple') as $fail)
-                                <li>{{ $fail->answer }}</li>
-                            @endforeach
-                        </ul>
+                        @foreach(session()->get('messageFailMultiple')['answers'] as $key => $answer)
+                            @if(session()->get('messageFailMultiple')['status'][$key] === 'Yep')<p class="alert-success" style="padding:5px">{{ $answer }}</p>@endif
+                            @if(session()->get('messageFailMultiple')['status'][$key] === 'Nope')<p class="alert-danger" style="padding:5px">{{ $answer }}</p>@endif
+                        @endforeach
                     </div>
                 @endif
                 <p class="question">{{ $randomQuestion->question }}</p>
@@ -76,7 +73,7 @@
                     <input type="submit" value="Valider" class="btn btn-primary">
                 </form>
             @elseif($randomQuestion->type->name === 'multiple réponses')
-                <form action="{{ action('FrontController@multipleAnswers', $randomQuestion->id) }}" method="POST"
+                <form action="{{ action('FrontController@answer', $randomQuestion->id) }}" method="POST"
                       class="col-xs-12">
                     {{ csrf_field() }}
                     @foreach(App\Answer::where('question_id', $randomQuestion->id)->get() as $answer)

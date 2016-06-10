@@ -3,16 +3,11 @@
 namespace App\Http\Controllers;
 
 use Auth;
-use App\User;
 use App\Theme;
-use App\Answer;
-use App\Result;
 use App\Question;
-use App\Http\Helpers;
 use App\Http\Requests;
 use App\Services\QuestionsService;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Session;
 
 class FrontController extends Controller
@@ -43,7 +38,7 @@ class FrontController extends Controller
         $maxQuestion = Question::where('theme_id', $theme)->get()->count();
 
         if ($total >= $maxQuestion)
-            return QuestionsService::result($request, $maxQuestion, $theme, $this->score);
+            return QuestionsService::getResult($request, $maxQuestion, $theme, $this->score);
 
         return QuestionsService::getRandomQuestion($theme, $total, $maxQuestion, $this->score);
     }
@@ -53,18 +48,11 @@ class FrontController extends Controller
         $question = Question::findOrFail($id);
         Session::push('questions', $id);
 
+        if($question->multiple())
+            return QuestionsService::checkAnswerMultiple($request, $question);
+
         return QuestionsService::checkAnswer($request, $question);
     }
-
-    public function multipleAnswers(Request $request, $id)
-    {
-        $question = Question::findOrFail($id);
-        Session::push('questions', $id);
-
-        return QuestionsService::checkAnswerMultiple($request, $question);
-    }
-
-
 
 }
 

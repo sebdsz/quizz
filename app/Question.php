@@ -36,4 +36,9 @@ class Question extends Model
     {
         return url('/') . DIRECTORY_SEPARATOR . env('UPLOAD_IMAGES', 'uploads') . DIRECTORY_SEPARATOR . $this->picture;
     }
+
+    public function multiple()
+    {
+        return $this->type->name === 'multiple réponses';
+    }
 }
