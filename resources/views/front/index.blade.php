@@ -14,21 +14,15 @@
                 @if(session()->has('messageMultiple'))
                     <div class="alert">
                         @if(session()->get('messageGood') === session()->get('messageMultiple')['nbAnswers'])
-                            Bravo, vous avez trouvé toutes les bonnes réponses, les
-                            réponses
-                            étaient
-                            bien :
+                            {{ trans('site.successMultiple') }}
                         @else
-                            Dommage, vous avez trouvé {{ session()->get('messageGood') }} bonne(s) réponse(s), les
-                            réponses
-                            étaient
-                            donc :
+                            <?php echo sprintf(trans('site.failMultiple'), session()->get('messageGood')); ?>
                         @endif
                         @foreach(session()->get('messageMultiple')['answers'] as $key => $answer)
                             @if(session()->get('messageMultiple')['status'][$key])<p class="alert-success"
-                                                                                               style="padding:5px">{{ $answer }}</p>@endif
+                                                                                     style="padding:5px">{{ $answer }}</p>@endif
                             @if(!session()->get('messageMultiple')['status'][$key])<p class="alert-danger"
-                                                                                                style="padding:5px">{{ $answer }}</p>@endif
+                                                                                      style="padding:5px">{{ $answer }}</p>@endif
                         @endforeach
                     </div>
                 @endif

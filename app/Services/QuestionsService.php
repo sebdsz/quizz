@@ -15,8 +15,8 @@ class QuestionsService
 {
     public static function checkAnswer($request, $question, $maxQuestion = null, $score = null)
     {
-        $success = sprintf('Bravo, la réponse à la question «%s» était bien «%s» !', $question->question, $question->answer);
-        $fail = sprintf('Dommage, la réponse à la question  «%s» était «%s» !', $question->question, $question->answer);
+        $success = sprintf(trans('site.success'), $question->question, $question->answer);
+        $fail = sprintf(trans('site.fail'), $question->question, $question->answer);
 
         if (Helpers::clean($question->answer) === Helpers::clean($request->get('answer'))) {
             Session::put('score', Session::get('score') + 1);
