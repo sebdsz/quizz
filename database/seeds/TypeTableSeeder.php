@@ -19,5 +19,9 @@ class TypeTableSeeder extends Seeder
         \App\Type::create([
             'name' => 'qcm',
         ]);
+
+        \App\Type::create([
+            'name' => 'multiple réponses',
+        ]);
     }
 }
