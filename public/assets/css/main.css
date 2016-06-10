@@ -1,0 +1,92 @@
+body {
+    padding-bottom: 50px;
+    color: #333;
+    font-family: 'Roboto', sans-serif;
+}
+
+h2 {
+    text-transform: uppercase;
+    margin-bottom:30px;
+}
+h2::after {
+    content: '';
+    width:100px;
+    height:2px;
+    margin: 0 auto;
+    display: block;
+    background: #333;
+
+}
+
+#logo {
+    max-width: 200px;
+    height: auto;
+    margin: 20px auto 0;
+}
+
+.checkbox, .radio {
+    margin-top: 10px !important;
+    text-align: center;
+}
+
+.radio label {
+    padding: 10px 10px 10px 30px;
+    background: rgba(0, 0, 0, .2);
+    -webkit-border-radius: 5px;
+    -moz-border-radius: 5px;
+    border-radius: 5px;
+}
+
+.td {
+    display: table;
+    margin: 0 auto;
+}
+
+h2 {
+    text-align: center;
+}
+
+input[type="submit"] {
+    display: block;
+    margin: 5px auto;
+}
+
+.btn-center {
+    display: block;
+    margin: 10px auto 0;
+}
+
+p.question {
+    text-align: center;
+}
+
+.deleteAnswer {
+    cursor: pointer;
+}
+
+#score {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: #333333;
+    color: white;
+    text-align: center;
+    font-style: italic;
+    font-weight: bold;
+}
+
+.qcm, .multiple {
+    display: none;
+}
+
+.theme {
+    max-width: 320px;
+    margin: 5px auto;
+}
+
+@media screen and (max-width: 640px) {
+    header {
+        display: none;
+    }
+}

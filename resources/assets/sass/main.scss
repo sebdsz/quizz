@@ -1,0 +1,33 @@
+.bestPost {
+    padding: 20px; background: #d9ffac;
+
+}
+h2 {
+    text-align: center;
+}
+h3 {
+    text-align: center;
+}
+p {
+    text-align: center;
+}
+
+.author {
+    font-style:italic;
+    font-size: 12px;
+}
+
+ul.tags {
+    list-style: none;
+    display: table;
+    margin: 0 auto;
+    li {
+        float: left;
+        margin: 0 5px;
+    }
+}
+
+img {
+    display: block;
+    margin: 0 auto;
+}
