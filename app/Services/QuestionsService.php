@@ -13,7 +13,6 @@ use Illuminate\Support\Facades\Session;
 
 class QuestionsService
 {
-
     public static function checkAnswer($request, $question, $maxQuestion = null, $score = null)
     {
         $success = sprintf('Bravo, la réponse à la question «%s» était bien «%s» !', $question->question, $question->answer);
@@ -44,12 +43,12 @@ class QuestionsService
 
         if (is_array($request->get('answer'))) {
             foreach ($question->answers as $key => $answer) {
-                $status[$key] = 'Nope';
+                $status[$key] = false;
                 foreach ($request->get('answer') as $ourAnswer) {
                     if (Helpers::clean($answer->answer) === Helpers::clean($ourAnswer)) {
                         Session::put('score', Session::get('score') + (1 / $nbAnswers));
                         $goodAnswers++;
-                        $status[$key] = 'Yep';
+                        $status[$key] = true;
                     }
                 }
             }
@@ -60,17 +59,14 @@ class QuestionsService
         }
 
 
-        if ($goodAnswers == $nbAnswers) {
-            if ($maxQuestion)
-                return view('front.result', compact('score', 'maxQuestion'))->with('messageSuccessMultiple', ['status' => $status, 'answers' => $answers])->with('messageGood', $goodAnswers);
-            else
-                return back()->with('messageSuccessMultiple', $question->answers)->with('messageGood', ['status' => $status, 'answers' => $answers]);
-        }
-
         if ($maxQuestion)
-            return view('front.result', compact('score', 'maxQuestion'))->with('messageFailMultiple', ['status' => $status, 'answers' => $answers])->with('messageGood', $goodAnswers);
+            return view('front.result', compact('score', 'maxQuestion'))
+                ->with('messageMultiple', ['status' => $status, 'answers' => $answers, 'nbAnswers' => $nbAnswers])
+                ->with('messageGood', $goodAnswers);
         else
-            return back()->with('messageFailMultiple', ['status' => $status, 'answers' => $answers])->with('messageGood', $goodAnswers);
+            return back()
+                ->with('messageMultiple', ['status' => $status, 'answers' => $answers, 'nbAnswers' => $nbAnswers])
+                ->with('messageGood', $goodAnswers);
 
     }
 
@@ -86,7 +82,8 @@ class QuestionsService
         Session::forget('score');
         Session::forget('questions');
 
-        if ($lastQuestion->type->name === 'multiple réponses') return QuestionsService::checkAnswerMultiple($request, $lastQuestion, $maxQuestion, $score);
+        if ($lastQuestion->multiple())
+            return QuestionsService::checkAnswerMultiple($request, $lastQuestion, $maxQuestion, $score);
 
         return QuestionsService::checkAnswer($request, $lastQuestion, $maxQuestion, $score);
     }
@@ -94,7 +91,10 @@ class QuestionsService
     public static function getRandomQuestion($theme, $total, $maxQuestion, $score)
     {
         $prevQuestions = Session::get('questions');
-        $questions = Question::with('answers', 'type', 'theme')->whereNotIn('id', $prevQuestions)->where('theme_id', $theme)->get();
+        $questions = Question::with('answers', 'type', 'theme')
+            ->whereNotIn('id', $prevQuestions)
+            ->where('theme_id', $theme)
+            ->get();
         $nbQuestions = $questions->count();
         $randomQuestion = $questions[rand(0, $nbQuestions - 1)];
         $remainingQuestions = $maxQuestion - $total;

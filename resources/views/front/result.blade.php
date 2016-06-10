@@ -11,21 +11,24 @@
                     <div class="alert alert-danger" role="alert">{{ session()->get('messageFail') }}</div>
                 @endif
 
-                @if( session()->has('messageSuccessMultiple'))
-                    <div class="alert alert-success">
-                        Bravo, toutes les réponses sont exactes, les réponses étaient bien :
-                        @foreach(session()->get('messageSuccessMultiple') as $success)
-                            <p>{{ $success->answer }}</p>
-                        @endforeach
-                    </div>
-                @elseif(session()->has('messageFailMultiple'))
+                @if(session()->has('messageMultiple'))
                     <div class="alert">
-                        Dommage vous avez trouvé {{ session()->get('messageGood') }} bonne(s) réponse(s), les réponses
-                        étaient
-                        donc :
-                        @foreach(session()->get('messageFailMultiple')['answers'] as $key => $answer)
-                            @if(session()->get('messageFailMultiple')['status'][$key] === 'Yep')<p class="alert-success" style="padding:5px">{{ $answer }}</p>@endif
-                            @if(session()->get('messageFailMultiple')['status'][$key] === 'Nope')<p class="alert-danger" style="padding:5px">{{ $answer }}</p>@endif
+                        @if(session()->get('messageGood') === session()->get('messageMultiple')['nbAnswers'])
+                            Bravo, vous avez trouvé toutes les bonnes réponses, les
+                            réponses
+                            étaient
+                            bien :
+                        @else
+                            Dommage, vous avez trouvé {{ session()->get('messageGood') }} bonne(s) réponse(s), les
+                            réponses
+                            étaient
+                            donc :
+                        @endif
+                        @foreach(session()->get('messageMultiple')['answers'] as $key => $answer)
+                            @if(session()->get('messageMultiple')['status'][$key])<p class="alert-success"
+                                                                                               style="padding:5px">{{ $answer }}</p>@endif
+                            @if(!session()->get('messageMultiple')['status'][$key])<p class="alert-danger"
+                                                                                                style="padding:5px">{{ $answer }}</p>@endif
                         @endforeach
                     </div>
                 @endif
