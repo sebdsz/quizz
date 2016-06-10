@@ -34,6 +34,6 @@ class Question extends Model
 
     public function uriPicture()
     {
-        return url('') . '/' . env('UPLOAD_IMAGES', 'uploads') . '/' . $this->picture;
+        return url('/') . DIRECTORY_SEPARATOR . env('UPLOAD_IMAGES', 'uploads') . DIRECTORY_SEPARATOR . $this->picture;
     }
 }
