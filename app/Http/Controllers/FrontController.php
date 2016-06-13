@@ -32,10 +32,12 @@ class FrontController extends Controller
 
         $total = sizeof(Session::get('questions'));
 
-        $theme = Theme::where('slug', $theme)->first();
-        $theme = $theme->id;
-
-        $maxQuestion = Question::where('theme_id', $theme)->get()->count();
+        if ($theme === 'aleatoire')
+            $maxQuestion = 20;
+        else {
+            $theme = Theme::where('slug', $theme)->first()->id;
+            $maxQuestion = Question::where('theme_id', $theme)->get()->count();
+        }
 
         if ($total >= $maxQuestion)
             return QuestionsService::getResult($request, $maxQuestion, $theme, $this->score);
@@ -48,7 +50,7 @@ class FrontController extends Controller
         $question = Question::findOrFail($id);
         Session::push('questions', $id);
 
-        if($question->multiple())
+        if ($question->multiple())
             return QuestionsService::checkAnswerMultiple($request, $question);
 
         return QuestionsService::checkAnswer($request, $question);

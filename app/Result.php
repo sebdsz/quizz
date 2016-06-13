@@ -2,6 +2,7 @@
 
 namespace App;
 
+use App\Theme;
 use App\Question;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
@@ -29,11 +30,24 @@ class Result extends Model
         return $this->belongsTo('App\Theme');
     }
 
-    public function maxQuestions($theme_id)
-    {
-        $maxQuestions = Question::where('theme_id', $theme_id)->get()->count();
 
-        return $maxQuestions;
+    public function maxQuestions()
+    {
+        $theme = $this->theme;
+
+        return $maxQuestions = isset($theme) ? Question::where('theme_id', $theme->id)->get()->count() : 20;
+    }
+
+    public function score()
+    {
+        return $this->score . '/' . $this->maxQuestions();
+    }
+
+    public function themeName()
+    {
+        $theme = $this->theme;
+
+        return $name = isset($theme) ? ucfirst($this->theme->name) : 'Aléatoire';
     }
 
     public function date()
@@ -46,6 +60,11 @@ class Result extends Model
     {
         $createdAt = Carbon::now();
         $this->attributes['created_at'] = $createdAt->addHours(2);
+    }
+
+    public function setThemeIdAttribute($value)
+    {
+        $this->attributes['theme_id'] = ($value === 'aleatoire') ? null : $value;
     }
 
     public function getScoreAttribute($value)

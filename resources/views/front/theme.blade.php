@@ -15,7 +15,10 @@
                         </div>
                     @endif
                 @endforeach
-
+                <div class="theme">
+                    <a style="display: block" href="{{ action('FrontController@index', 'aleatoire')}}"
+                       class="btn btn-warning">Aléatoire<br/>(20 questions)</a>
+                </div>
             </div>
         </div>
     </div>

@@ -35,7 +35,6 @@ Route::group(['middleware' => 'web'], function () {
         });
         Route::get('quizz/{slug?}', 'FrontController@index');
         route::post('answer/{id}', 'FrontController@answer');
-        route::post('multipleAnswers/{id}', 'FrontController@multipleAnswers');
     });
 
     Route::group(['middleware' => 'auth.admin'], function () {

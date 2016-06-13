@@ -14,8 +14,8 @@ class Theme extends Model
     {
         return $this->hasMany('App\Question');
     }
-    
-     public function results()
+
+    public function results()
     {
         return $this->hasMany('App\Result');
     }

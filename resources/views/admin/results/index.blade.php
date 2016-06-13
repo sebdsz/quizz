@@ -16,8 +16,8 @@
                     @forelse($results as $result)
                         <tr>
                             <td>{{ $result->user->first_name }}</td>
-                            <td>{{ $result->score }}/{{ $result->maxQuestions($result->theme->id) }}</td>
-                            <td>{{ ucfirst($result->theme->name) }}</td>
+                            <td>{{ $result->score() }}</td>
+                            <td>{{ $result->themeName() }}</td>
                             <td>{{ $result->date() }}</td>
 
                             @empty

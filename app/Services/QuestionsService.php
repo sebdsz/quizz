@@ -73,6 +73,7 @@ class QuestionsService
     public static function getResult(Request $request, $maxQuestion, $theme, $score)
     {
         $lastQuestion = Question::findOrFail(Session::get('questions')[$maxQuestion - 1]);
+
         Result::create([
             'score' => $score,
             'user_id' => Auth::user()->id,
@@ -92,9 +93,10 @@ class QuestionsService
     {
         $prevQuestions = Session::get('questions');
         $questions = Question::with('answers', 'type', 'theme')
-            ->whereNotIn('id', $prevQuestions)
-            ->where('theme_id', $theme)
-            ->get();
+            ->whereNotIn('id', $prevQuestions);
+        $questions = ($theme === 'aleatoire') ? $questions : $questions->where('theme_id', $theme);
+        $questions = $questions->get();
+
         $nbQuestions = $questions->count();
         $randomQuestion = $questions[rand(0, $nbQuestions - 1)];
         $remainingQuestions = $maxQuestion - $total;
