@@ -69,11 +69,11 @@
                     </div>
                     <input type="submit" value="Valider" class="btn btn-primary">
                 </form>
-            @elseif($randomQuestion->type->name === 'multiple réponses')
+            @elseif($randomQuestion->multiple())
                 <form action="{{ action('FrontController@answer', $randomQuestion->id) }}" method="POST"
                       class="col-xs-12">
                     {{ csrf_field() }}
-                    @foreach(App\Answer::where('question_id', $randomQuestion->id)->get() as $answer)
+                    @foreach($randomQuestion->answers as $answer)
                         <div class="form-group">
                             <input type="text" name="answer[]" class="form-control" placeholder="Votre réponse"
                                    autocomplete="off">
